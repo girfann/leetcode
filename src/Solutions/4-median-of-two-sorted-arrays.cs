@@ -1,27 +1,40 @@
-﻿namespace Solutions
+﻿using System;
+
+namespace Solutions
 {
     public partial class Solution
     {
-        public double FindMedianSortedArrays(int[] nums1, int[] nums2)
+        public double FindMedianSortedArrays(int[] a, int[] b)
         {
-            var totalCount = nums1.Length + nums2.Length;
-            var totalMedian = (totalCount / 2) + 1;
+            if (a.Length > b.Length)
+                return FindMedianSortedArrays(b, a);
 
-            var current = 0;
-            var previous = 0;
+            var total = a.Length + b.Length;
+            var half = (total + 1) / 2;
 
-            for (int i1 = 0, i2 = 0; (i1 + i2) < totalMedian;)
+            var aMin = 0;
+            var aMax = a.Length;
+
+            while (true)
             {
-                var takeFromFirstArray =
-                    (i2 >= nums2.Length) ||
-                    (i1 < nums1.Length && nums1[i1] < nums2[i2]);
+                int aElements = (aMin + aMax) / 2;
+                int bElements = half - aElements;
 
-                previous = current;
-                current = takeFromFirstArray ? nums1[i1++] : nums2[i2++];
+                int aLeft = (aElements == 0) ? int.MinValue : a[aElements - 1];
+                int bLeft = (bElements == 0) ? int.MinValue : b[bElements - 1];
+
+                int aRight = (aElements == a.Length) ? int.MaxValue : a[aElements];
+                int bRight = (bElements == b.Length) ? int.MaxValue : b[bElements];
+
+                if (aLeft <= bRight && bLeft <= aRight)
+                    return total % 2 == 0
+                        ? (Math.Max(aLeft, bLeft) + Math.Min(aRight, bRight)) / 2.0
+                        : Math.Max(aLeft, bLeft);
+                else if (aLeft > bRight)
+                    aMax = aElements - 1;
+                else
+                    aMin = aElements + 1;
             }
-
-            var isEven = totalCount % 2 == 0;
-            return isEven ? (previous + current) / 2.0 : current;
         }
     }
 }
