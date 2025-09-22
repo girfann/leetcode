@@ -9,7 +9,7 @@ public class Solution
 
         var longestPalindrome = string.Empty;
 
-        for (int i = 0; i < str.Length - 1; i++)
+        for (var i = 0; i < str.Length - 1; i++)
         {
             var index = i;
             var currentStr = str[i].ToString();
